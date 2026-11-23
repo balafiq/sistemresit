@@ -3,260 +3,541 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Resit Digital  🌱</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Sistem Resit Digital 🧾</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <!-- Menukar font kepada Quicksand untuk rupa yang lebih bulat dan comel -->
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background-color: #f0fbf4; /* Hijau mint sangat lembut */
-            color: #064e3b; /* Teks hijau gelap untuk kebolehbacaan */
+        /* ================= Palet Warna Pastel ================= */
+        :root {
+            --bg:            #fff7f0;  /* krim lembut */
+            --card:          #ffffff;
+            --ink:           #3d3553;  /* ungu gelap untuk teks */
+            --muted:         #8c84a6;
+            --line:          #efe7f5;
+
+            --mint:          #3cc3a0;  /* warna utama */
+            --mint-dark:     #239479;
+            --mint-soft:     #e3f8f1;
+
+            --pink:          #ff8fab;  /* aksen */
+            --pink-dark:     #e8678a;
+            --pink-soft:     #ffe8ee;
+
+            --lilac:         #b9a7f5;
+            --lilac-soft:    #f1ecff;
+
+            --butter:        #ffd36e;
+            --butter-soft:   #fff5d9;
+
+            --radius-lg: 28px;
+            --radius-md: 18px;
+            --radius-sm: 14px;
+            --shadow: 0 10px 30px rgba(61, 53, 83, 0.07), 0 2px 6px rgba(61, 53, 83, 0.04);
         }
-        
+
+        * { box-sizing: border-box; }
+
+        html, body { margin: 0; }
+
+        body {
+            font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            background-image:
+                radial-gradient(circle at 8% 12%, var(--pink-soft) 0, transparent 28%),
+                radial-gradient(circle at 92% 8%, var(--mint-soft) 0, transparent 30%),
+                radial-gradient(circle at 85% 90%, var(--lilac-soft) 0, transparent 30%),
+                radial-gradient(circle at 10% 95%, var(--butter-soft) 0, transparent 26%);
+            color: var(--ink);
+            padding: 28px 18px 60px;
+            min-height: 100vh;
+        }
+
+        ::selection { background: var(--pink-soft); color: var(--pink-dark); }
+
+        h1, h2, h3, .font-fun { font-family: 'Fredoka', 'Nunito', sans-serif; }
+
+        .wrap { max-width: 1120px; margin: 0 auto; }
+
+        /* ================= Emoji Beranimasi ================= */
+        .ae {
+            display: inline-block;
+            width: 1.4em;
+            height: 1.4em;
+            line-height: 1.4em;
+            text-align: center;
+            vertical-align: middle;
+            font-style: normal;
+        }
+        .ae img { width: 100%; height: 100%; display: block; }
+        .ae.fallback { animation: bounce 1.8s ease-in-out infinite; }
+        .ae.fallback.wiggle { animation-name: wiggle; }
+        .ae.fallback.pulse  { animation-name: pulse; }
+        .ae.fallback.spin   { animation-name: spin; animation-duration: 3s; animation-timing-function: linear; }
+
+        @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes wiggle { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
+        @keyframes pulse  { 0%,100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+        @keyframes spin   { to { transform: rotate(360deg); } }
+        @keyframes float  { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-8px) rotate(3deg); } }
+
+        /* ================= Header ================= */
+        header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .logo {
+            width: 72px; height: 72px;
+            border-radius: 24px;
+            background: var(--card);
+            box-shadow: var(--shadow);
+            display: grid; place-items: center;
+            font-size: 40px;
+            animation: float 4s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+        header h1 {
+            margin: 0;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.5px;
+        }
+        header h1 .hl { color: var(--mint); }
+        header p { margin: 2px 0 0; color: var(--muted); font-weight: 600; }
+
+        /* ================= Grid ================= */
+        .grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+        @media (min-width: 1024px) {
+            .grid { grid-template-columns: 7fr 5fr; gap: 28px; }
+            .sticky { position: sticky; top: 24px; }
+        }
+        .stack > * + * { margin-top: 20px; }
+
+        /* ================= Kad ================= */
+        .card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            border: 2px solid #fff;
+            position: relative;
+        }
+        .card-head {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; margin-bottom: 18px;
+        }
+        .card-title {
+            display: flex; align-items: center; gap: 10px;
+            margin: 0; font-size: 1.25rem; font-weight: 600;
+        }
+        @media (max-width: 420px) { .card { padding: 20px 18px; } .card-title { font-size: 1.08rem; gap: 8px; } }
+        .step {
+            width: 30px; height: 30px; border-radius: 10px;
+            display: grid; place-items: center;
+            font-family: 'Fredoka', sans-serif; font-size: .95rem; font-weight: 700;
+            color: #fff;
+        }
+        .step.mint  { background: var(--mint); }
+        .step.pink  { background: var(--pink); }
+        .step.lilac { background: var(--lilac); }
+
+        /* ================= Input ================= */
+        .fields { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        @media (min-width: 640px) { .fields.two { grid-template-columns: 1fr 1fr; } }
+
+        label {
+            display: block;
+            font-size: .82rem; font-weight: 800;
+            color: var(--muted);
+            margin-bottom: 6px;
+            letter-spacing: .2px;
+        }
+        input {
+            width: 100%;
+            font: inherit; font-weight: 700;
+            color: var(--ink);
+            background: #fbf9fe;
+            border: 2px solid var(--line);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+        input::placeholder { color: #c3bdd6; font-weight: 600; }
+        input:focus {
+            border-color: var(--mint);
+            background: #fff;
+            box-shadow: 0 0 0 4px var(--mint-soft);
+        }
+        input[type=number]::-webkit-inner-spin-button { opacity: .5; }
+
+        .phone { display: flex; }
+        .phone span {
+            display: grid; place-items: center;
+            padding: 0 14px;
+            background: var(--mint-soft);
+            color: var(--mint-dark);
+            font-weight: 800;
+            border: 2px solid var(--line); border-right: 0;
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+        }
+        .phone input { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+
+        /* ================= Item ================= */
+        .item-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            grid-template-areas: "desc desc desc" "qty price del";
+            gap: 12px;
+            align-items: end;
+            padding: 14px;
+            background: #fdfbff;
+            border: 2px dashed var(--line);
+            border-radius: var(--radius-md);
+            transition: opacity .3s, transform .3s;
+        }
+        .item-row + .item-row { margin-top: 12px; }
+        .item-row.entering, .item-row.leaving { opacity: 0; transform: scale(.96); }
+        .item-row .f-desc  { grid-area: desc; }
+        .item-row .f-qty   { grid-area: qty; }
+        .item-row .f-price { grid-area: price; }
+        .item-row .f-del   { grid-area: del; }
+        .item-row .f-qty input, .item-row .f-price input { text-align: center; }
+        @media (min-width: 640px) {
+            .item-row { grid-template-columns: 2fr 1fr 1fr auto; grid-template-areas: "desc qty price del"; }
+        }
+
+        /* ================= Butang ================= */
+        button { font: inherit; cursor: pointer; border: 0; }
+        .btn-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-weight: 800; font-size: .88rem;
+            transition: transform .15s, background .2s;
+            white-space: nowrap;
+        }
+        .btn-chip:hover { transform: translateY(-2px); }
+        .btn-chip:active { transform: scale(.96); }
+        .btn-chip.mint { background: var(--mint-soft); color: var(--mint-dark); }
+        .btn-chip.mint:hover { background: #cdf2e6; }
+        .btn-chip.butter { background: var(--butter-soft); color: #b7861a; }
+        .btn-chip.butter:hover { background: #ffecb8; }
+
+        .btn-del {
+            width: 46px; height: 48px;
+            border-radius: var(--radius-sm);
+            background: var(--pink-soft); color: var(--pink-dark);
+            display: grid; place-items: center;
+            transition: transform .15s, background .2s;
+        }
+        .btn-del:hover { background: #ffd6e0; transform: rotate(-6deg); }
+        .btn-del svg { width: 20px; height: 20px; }
+
+        .btn-big {
+            width: 100%;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 1.15rem;
+            transition: transform .15s, box-shadow .2s, filter .2s;
+        }
+        .btn-big:hover { transform: translateY(-3px); }
+        .btn-big:active { transform: translateY(0) scale(.98); }
+        .btn-primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--mint) 0%, #5fd3b7 100%);
+            box-shadow: 0 10px 22px rgba(60, 195, 160, .35);
+        }
+        .btn-primary:hover { box-shadow: 0 14px 28px rgba(60, 195, 160, .45); }
+        .btn-wa {
+            color: #fff;
+            background: #25d366;
+            box-shadow: 0 10px 22px rgba(37, 211, 102, .3);
+        }
+        .btn-outline {
+            color: var(--ink);
+            background: #fff;
+            border: 2px solid var(--line);
+        }
+        .btn-outline:hover { border-color: var(--lilac); background: var(--lilac-soft); }
+
+        /* ================= Tandatangan ================= */
         .canvas-container {
             position: relative;
             width: 100%;
-            height: 200px;
-            border: 3px dashed #a7f3d0; /* Garisan putus-putus hijau muda */
-            border-radius: 1.5rem; /* Bucu sangat bulat */
-            background-color: #ffffff;
+            height: 190px;
+            border: 3px dashed #d9d0ef;
+            border-radius: var(--radius-md);
+            background: #fdfbff;
             overflow: hidden;
             touch-action: none;
-            transition: all 0.3s ease;
+            cursor: crosshair;
+            transition: border-color .2s, box-shadow .2s;
         }
-        
-        .canvas-container:hover {
-            border-color: #34d399;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
+        .canvas-container::before {
+            content: '';
+            position: absolute; left: 24px; right: 24px; bottom: 44px;
+            border-bottom: 2px solid #ece6f8;
+            pointer-events: none;
         }
+        .canvas-container:hover { border-color: var(--lilac); box-shadow: 0 0 0 4px var(--lilac-soft); }
+        .canvas-hint {
+            position: absolute; left: 0; right: 0; bottom: 14px;
+            text-align: center; color: #c3bdd6; font-weight: 700; font-size: .85rem;
+            pointer-events: none;
+            transition: opacity .2s;
+        }
+        #signaturePad { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-        #signaturePad {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        /* ================= Pratonton Kosong ================= */
+        .empty {
+            min-height: 460px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center;
+            padding: 40px 24px;
+            border-radius: var(--radius-lg);
+            border: 3px dashed #e5ddf2;
+            background: rgba(255,255,255,.6);
         }
-        
-        /* Gaya Scrollbar Comel */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f0fbf4; }
-        ::-webkit-scrollbar-thumb { background: #a7f3d0; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #6ee7b7; }
+        .empty .big { font-size: 64px; margin-bottom: 10px; }
+        .empty h3 { margin: 6px 0; font-size: 1.3rem; font-weight: 600; }
+        .empty p { margin: 0; color: var(--muted); font-weight: 600; }
 
-        /* Animasi Toast */
-        @keyframes bounceIn {
-            0% { transform: scale(0.1); opacity: 0; }
-            60% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
+        /* ================= Kertas Resit ================= */
+        #receiptPreview {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 34px 26px 26px;
+            position: relative;
+            overflow: hidden;
         }
-        @keyframes fadeOut {
-            from { opacity: 1; transform: scale(1); }
-            to { opacity: 0; transform: scale(0.9); }
+        #receiptPreview.pop { animation: popIn .5s cubic-bezier(.18,.89,.32,1.28); }
+        @keyframes popIn { from { opacity: 0; transform: translateY(16px) scale(.96); } to { opacity: 1; transform: none; } }
+
+        .r-stripe {
+            position: absolute; top: 0; left: 0; right: 0; height: 10px;
+            background: linear-gradient(90deg, var(--mint) 0%, var(--mint) 25%, var(--pink) 25%, var(--pink) 50%, var(--butter) 50%, var(--butter) 75%, var(--lilac) 75%, var(--lilac) 100%);
         }
-        .toast-enter { animation: bounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .toast-exit { animation: fadeOut 0.3s ease-in forwards; }
+        .r-head { text-align: center; margin-bottom: 20px; }
+        .r-badge {
+            display: inline-block;
+            padding: 5px 14px; border-radius: 999px;
+            background: var(--mint-soft); color: var(--mint-dark);
+            font-size: .72rem; font-weight: 800; letter-spacing: 2px;
+        }
+        .r-head h2 { margin: 10px 0 6px; font-size: 1.7rem; font-weight: 700; color: var(--ink); }
+        .r-meta { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 14px; color: var(--muted); font-size: .82rem; font-weight: 700; }
+        .r-meta p { margin: 0; }
+
+        .r-cust {
+            background: var(--lilac-soft);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            margin-bottom: 16px;
+        }
+        .r-label { margin: 0 0 4px; font-size: .7rem; font-weight: 800; letter-spacing: 1.5px; color: #9a8bd6; text-transform: uppercase; }
+        .r-cust .name { margin: 0; font-family: 'Fredoka', sans-serif; font-size: 1.15rem; font-weight: 600; }
+        .r-cust .phone-txt { margin: 2px 0 0; font-size: .88rem; color: var(--muted); font-weight: 700; }
+
+        table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+        thead th {
+            font-size: .72rem; letter-spacing: 1px; text-transform: uppercase;
+            color: var(--muted); font-weight: 800;
+            padding: 8px 0; border-bottom: 2px dashed var(--line);
+        }
+        tbody td { padding: 10px 0; border-bottom: 1px solid #f5f1fa; font-weight: 700; vertical-align: top; }
+        tbody tr:last-child td { border-bottom: 0; }
+        .unit { display: block; font-size: .75rem; color: var(--muted); font-weight: 600; margin-top: 2px; }
+        .tl { text-align: left; } .tc { text-align: center; } .tr { text-align: right; }
+
+        .r-total {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 12px;
+            padding: 14px 16px;
+            background: var(--mint-soft);
+            border-radius: var(--radius-md);
+        }
+        .r-total span { font-weight: 800; font-size: .8rem; letter-spacing: 1px; color: var(--mint-dark); }
+        .r-total strong { font-family: 'Fredoka', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--mint-dark); }
+
+        .r-sign { margin-top: 20px; padding-top: 16px; border-top: 2px dashed var(--line); text-align: center; }
+        .r-sign .r-label { color: var(--muted); }
+        .r-sign .box { height: 90px; display: flex; justify-content: center; align-items: center; }
+        .r-sign img { max-height: 100%; max-width: 100%; object-fit: contain; }
+        .r-foot { margin: 12px 0 0; text-align: center; font-size: .8rem; color: var(--muted); font-weight: 700; }
+
+        .actions { margin-top: 18px; display: grid; gap: 12px; }
+
+        /* ================= Toast ================= */
+        #toastContainer {
+            position: fixed; top: 16px; right: 16px; left: 16px;
+            z-index: 50;
+            display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+            pointer-events: none;
+        }
+        .toast {
+            display: flex; align-items: center; gap: 10px;
+            max-width: 360px;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            font-weight: 800; font-size: .92rem;
+            background: #fff;
+            box-shadow: 0 12px 30px rgba(61,53,83,.15);
+            border-left: 6px solid;
+            animation: toastIn .4s cubic-bezier(.18,.89,.32,1.28) forwards;
+        }
+        .toast.error   { border-color: var(--pink); color: var(--pink-dark); }
+        .toast.success { border-color: var(--mint); color: var(--mint-dark); }
+        .toast.out { animation: toastOut .3s ease-in forwards; }
+        @keyframes toastIn  { from { opacity: 0; transform: translateX(30px) scale(.9); } to { opacity: 1; transform: none; } }
+        @keyframes toastOut { to { opacity: 0; transform: translateX(30px) scale(.9); } }
+
+        .hidden { display: none !important; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+        }
 
         @media print {
+            body { background: #fff; padding: 0; }
             body * { visibility: hidden; }
             #receiptPreview, #receiptPreview * { visibility: visible; }
-            #receiptPreview {
-                position: absolute;
-                left: 0; top: 0; width: 100%;
-                box-shadow: none; margin: 0; padding: 0;
-                border: none;
-            }
+            #receiptPreview { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; }
             .no-print { display: none !important; }
         }
     </style>
 </head>
 
-<body class="p-4 md:p-8 selection:bg-emerald-200 selection:text-emerald-900">
+<body>
 
-    <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-3"></div>
+    <div id="toastContainer"></div>
 
-    <div class="max-w-6xl mx-auto">
-        <!-- Header Comel -->
-        <header class="mb-10 text-center md:text-left flex flex-col md:flex-row items-center gap-4">
-            <div class="bg-emerald-100 p-4 rounded-3xl shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-            </div>
+    <div class="wrap">
+        <header>
+            <div class="logo"><i class="ae" data-e="1f9fe">🧾</i></div>
             <div>
-                <h1 class="text-3xl md:text-4xl font-bold text-emerald-800 tracking-tight">Sistem Resit 🧾</h1>
+                <h1>Sistem <span class="hl">Resit</span> <i class="ae" data-e="2728" data-a="pulse">✨</i></h1>
+                <p>Jana resit comel &amp; hantar terus ke WhatsApp</p>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            <div class="lg:col-span-7 space-y-6">
-                
-                <!-- Maklumat Pelanggan -->
-                <div class="bg-white p-7 rounded-[2rem] shadow-[0_8px_30px_rgb(16,185,129,0.06)] border-2 border-emerald-50">
-                    <h2 class="text-xl font-bold text-emerald-700 mb-5 flex items-center gap-2">
-                        <span>👤</span> Butiran Pelanggan
-                    </h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div>
-                            <label class="block text-sm font-bold text-emerald-600 mb-2">Nama 👤</label>
-                            <input type="text" id="custName" placeholder="Contoh: Ali bin Abu" class="w-full bg-emerald-50/50 border-2 border-emerald-100 rounded-2xl p-3 focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 outline-none transition-all text-emerald-800 placeholder-emerald-300">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-emerald-600 mb-2">No. Telefon WhatsApp 📱</label>
-                            <div class="flex">
-                                <span class="inline-flex items-center px-4 text-sm font-bold text-emerald-700 bg-emerald-100 border-2 border-r-0 border-emerald-100 rounded-l-2xl">
-                                    +60
-                                </span>
-                                <input type="tel" inputmode="numeric" id="custPhone" placeholder="123456789" class="rounded-none rounded-r-2xl bg-emerald-50/50 border-2 border-emerald-100 text-emerald-800 focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 block flex-1 min-w-0 w-full p-3 outline-none transition-all placeholder-emerald-300">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="grid">
 
-                <!-- Senarai Item -->
-                <div class="bg-white p-7 rounded-[2rem] shadow-[0_8px_30px_rgb(16,185,129,0.06)] border-2 border-emerald-50">
-                    <div class="flex justify-between items-center mb-5">
-                        <h2 class="text-xl font-bold text-emerald-700 flex items-center gap-2">
-                            <span>🛍️</span> Senarai Belian
-                        </h2>
-                        <button onclick="addItemRow()" class="text-sm bg-emerald-100 text-emerald-700 hover:bg-emerald-200 hover:scale-105 py-2 px-4 rounded-xl font-bold transition-all flex items-center gap-1">
-                            <span>+</span> Tambah
-                        </button>
+            <!-- ============ Borang (kiri) ============ -->
+            <div class="stack">
+
+                <section class="card">
+                    <div class="card-head">
+                        <h2 class="card-title"><span class="step mint">1</span> Butiran Pelanggan <i class="ae" data-e="1f44b" data-a="wiggle">👋</i></h2>
                     </div>
-                    
-                    <div id="itemsContainer" class="space-y-4">
-                        <!-- Baris Item Pertama -->
-                        <div class="item-row flex flex-col md:flex-row gap-3 items-end p-4 bg-emerald-50/30 rounded-2xl border border-emerald-50">
-                            <div class="w-full md:w-1/2">
-                                <label class="block text-xs font-bold text-emerald-600 mb-1">Perkara 📝</label>
-                                <input type="text" class="item-desc w-full bg-white border-2 border-emerald-100 rounded-xl p-2.5 focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 outline-none transition-all text-emerald-800" placeholder="Cth: Kek Coklat">
-                            </div>
-                            <div class="w-full md:w-1/4">
-                                <label class="block text-xs font-bold text-emerald-600 mb-1">Kuantiti 📦</label>
-                                <input type="number" min="1" value="1" class="item-qty w-full bg-white border-2 border-emerald-100 rounded-xl p-2.5 focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 outline-none transition-all text-emerald-800 text-center" onchange="calculateRowTotal(this)">
-                            </div>
-                            <div class="w-full md:w-1/4">
-                                <label class="block text-xs font-bold text-emerald-600 mb-1">Harga (RM) 💰</label>
-                                <input type="number" min="0" step="0.01" class="item-price w-full bg-white border-2 border-emerald-100 rounded-xl p-2.5 focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 outline-none transition-all text-emerald-800 text-center" placeholder="0.00" onchange="calculateRowTotal(this)">
-                            </div>
-                            <div class="w-full md:w-auto mt-2 md:mt-0">
-                                <button onclick="removeItemRow(this)" class="w-full md:w-auto bg-pink-100 text-pink-500 hover:bg-pink-200 hover:scale-105 p-3 rounded-xl transition-all" title="Padam Item">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                </button>
+                    <div class="fields two">
+                        <div>
+                            <label for="custName">Nama</label>
+                            <input type="text" id="custName" placeholder="Contoh: Ali bin Abu" autocomplete="off">
+                        </div>
+                        <div>
+                            <label for="custPhone">No. Telefon WhatsApp</label>
+                            <div class="phone">
+                                <span>+60</span>
+                                <input type="tel" inputmode="numeric" id="custPhone" placeholder="123456789" autocomplete="off">
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <!-- Pad Tandatangan -->
-                <div class="bg-white p-7 rounded-[2rem] shadow-[0_8px_30px_rgb(16,185,129,0.06)] border-2 border-emerald-50">
-                    <div class="flex justify-between items-center mb-5">
-                        <h2 class="text-xl font-bold text-emerald-700 flex items-center gap-2">
-                            <span>✍️</span> Tandatangan
-                        </h2>
-                        <button onclick="clearSignature()" class="text-sm bg-orange-50 text-orange-600 hover:bg-orange-100 hover:scale-105 py-1.5 px-4 rounded-xl font-bold transition-all">
-                            Padam Semula
-                        </button>
+                <section class="card">
+                    <div class="card-head">
+                        <h2 class="card-title"><span class="step pink">2</span> Senarai Belian <i class="ae" data-e="1f6d2">🛒</i></h2>
+                        <button type="button" class="btn-chip mint" onclick="addItemRow()">＋ Tambah</button>
                     </div>
-                    <div class="canvas-container cursor-crosshair">
+                    <div id="itemsContainer"></div>
+                </section>
+
+                <section class="card">
+                    <div class="card-head">
+                        <h2 class="card-title"><span class="step lilac">3</span> Tandatangan <i class="ae" data-e="270d_fe0f" data-a="wiggle">✍️</i></h2>
+                        <button type="button" class="btn-chip butter" onclick="clearSignature()">↺ Padam</button>
+                    </div>
+                    <div class="canvas-container">
                         <canvas id="signaturePad"></canvas>
+                        <div class="canvas-hint" id="canvasHint">Lukis tandatangan di sini ~</div>
                     </div>
-                    <p class="text-sm text-center text-emerald-500/70 mt-3 font-medium">Lukis tandatangan comel anda di sini 🎨</p>
-                </div>
+                </section>
 
-                <!-- Butang Jana -->
-                <button onclick="generateReceipt()" class="w-full bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-500 hover:to-teal-600 text-white font-bold text-lg py-4 px-4 rounded-2xl transition-all shadow-[0_8px_20px_rgb(16,185,129,0.3)] transform hover:-translate-y-1 flex justify-center items-center gap-2">
-                    <span>✨</span> Jana Resit Sekarang
+                <button type="button" class="btn-big btn-primary" onclick="generateReceipt()">
+                    <i class="ae" data-e="1fa84" data-a="wiggle">🪄</i> Jana Resit Sekarang
                 </button>
-
             </div>
 
-            <!-- Bahagian Pratonton (Kanan) -->
-            <div class="lg:col-span-5 relative">
-                <div class="sticky top-8">
-                    
-                    <!-- Kertas Resit -->
-                    <div id="receiptPreview" class="bg-white p-8 rounded-[2rem] shadow-xl border-4 border-dashed border-emerald-100 hidden relative overflow-hidden">
-                        
-                        <!-- Corak Hiasan Latar (Watermark) -->
-                        <div class="absolute -top-10 -right-10 text-emerald-50 opacity-50 transform rotate-12 pointer-events-none">
-                            <svg width="150" height="150" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                        </div>
+            <!-- ============ Pratonton (kanan) ============ -->
+            <div>
+                <div class="sticky">
 
-                        <!-- Header Resit -->
-                        <div class="text-center mb-8 relative z-10">
-                            <div class="inline-block bg-emerald-100 text-emerald-600 px-4 py-1 rounded-full text-xs font-bold mb-3 tracking-widest uppercase">Resit Rasmi</div>
-                            <h2 class="text-3xl font-extrabold text-emerald-800 mb-1">TERIMA KASIH! 💖</h2>
-                            <p class="text-sm font-medium text-emerald-500" id="receiptDate">Tarikh: -</p>
-                            <p class="text-sm font-medium text-emerald-500" id="receiptNo">No: -</p>
-                        </div>
+                    <div id="emptyPreview" class="empty">
+                        <div class="big"><i class="ae" data-e="1f48c" data-a="pulse">💌</i></div>
+                        <h3>Pratonton resit di sini</h3>
+                        <p>Isi maklumat &amp; tekan "Jana Resit" ya! <i class="ae" data-e="1f60a" data-a="pulse">😊</i></p>
+                    </div>
 
-                        <!-- Info Pelanggan di Resit -->
-                        <div class="mb-6 bg-emerald-50/50 p-4 rounded-2xl relative z-10">
-                            <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1">Disediakan Khas Untuk:</h3>
-                            <p class="font-bold text-emerald-900 text-lg" id="previewName">-</p>
-                            <p class="text-sm font-medium text-emerald-600" id="previewPhone">-</p>
-                        </div>
+                    <div id="receiptPreview" class="hidden">
+                        <div class="r-stripe"></div>
 
-                        <!-- Jadual Item -->
-                        <table class="w-full text-sm mb-6 relative z-10">
-                            <thead>
-                                <tr class="border-b-2 border-emerald-100 text-emerald-600">
-                                    <th class="text-left py-3 font-bold">Perkara</th>
-                                    <th class="text-center py-3 font-bold">Kuantiti</th>
-                                    <th class="text-right py-3 font-bold">Jumlah</th>
-                                </tr>
-                            </thead>
-                            <tbody id="previewItems" class="text-emerald-800 font-medium">
-                                <!-- Dinamik dipenuhi oleh JS -->
-                            </tbody>
-                            <tfoot>
-                                <tr class="border-t-2 border-emerald-200 font-bold text-lg">
-                                    <td colspan="2" class="text-right py-4 pr-4 text-emerald-700">JUMLAH KESELURUHAN:</td>
-                                    <td class="text-right py-4 text-emerald-900" id="previewTotal">RM 0.00</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-
-                        <!-- Tandatangan di Resit -->
-                        <div class="mt-8 pt-6 border-t-2 border-dashed border-emerald-100 relative z-10">
-                            <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2 text-center">Tandatangan Pengesahan</h3>
-                            <div class="h-24 w-full relative flex justify-center">
-                                <img id="previewSignature" src="" alt="Tandatangan" class="max-h-full max-w-full object-contain hidden filter drop-shadow-md">
+                        <div class="r-head">
+                            <span class="r-badge">RESIT RASMI</span>
+                            <h2>Terima Kasih! 💖</h2>
+                            <div class="r-meta">
+                                <p id="receiptNo">No: -</p>
+                                <p id="receiptDate">Tarikh: -</p>
                             </div>
                         </div>
+
+                        <div class="r-cust">
+                            <p class="r-label">Disediakan khas untuk</p>
+                            <p class="name" id="previewName">-</p>
+                            <p class="phone-txt" id="previewPhone">-</p>
+                        </div>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="tl">Perkara</th>
+                                    <th class="tc">Qty</th>
+                                    <th class="tr">Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody id="previewItems"></tbody>
+                        </table>
+
+                        <div class="r-total">
+                            <span>JUMLAH KESELURUHAN</span>
+                            <strong id="previewTotal">RM 0.00</strong>
+                        </div>
+
+                        <div class="r-sign">
+                            <p class="r-label">Tandatangan Pengesahan</p>
+                            <div class="box">
+                                <img id="previewSignature" src="" alt="Tandatangan" class="hidden">
+                            </div>
+                        </div>
+
+                        <p class="r-foot">Terima kasih atas sokongan anda 🌷</p>
                     </div>
 
-                    <!-- Pilihan Tindakan selepas resit dijana -->
-                    <div id="actionButtons" class="mt-6 space-y-4 hidden no-print">
-                        <button onclick="sendToWhatsApp()" class="w-full flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold text-lg py-4 px-4 rounded-2xl transition-all shadow-[0_8px_20px_rgba(37,211,102,0.3)] hover:-translate-y-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
-                            </svg>
+                    <div id="actionButtons" class="actions hidden no-print">
+                        <button type="button" class="btn-big btn-wa" onclick="sendToWhatsApp()">
+                            <svg width="22" height="22" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.930A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.560 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.660c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.170-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.050-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
                             Hantar ke WhatsApp
                         </button>
-                        
-                        <button onclick="downloadPDF()" class="w-full bg-white hover:bg-emerald-50 text-emerald-700 border-2 border-emerald-200 font-bold text-lg py-4 px-4 rounded-2xl transition-all flex justify-center items-center gap-2 hover:-translate-y-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                            </svg>
-                            Muat Turun PDF
+                        <button type="button" class="btn-big btn-outline" onclick="downloadPDF()">
+                            <i class="ae" data-e="1f4e6" data-a="bounce">📦</i> Muat Turun PDF
                         </button>
-                    </div>
-
-                    <!-- Paparan Kekosongan sebelum dijana -->
-                    <div id="emptyPreview" class="bg-emerald-50/50 border-4 border-dashed border-emerald-100 rounded-[2rem] p-12 text-center flex flex-col items-center justify-center h-full min-h-[450px]">
-                        <div class="bg-white p-4 rounded-full shadow-sm mb-4">
-                            <span class="text-4xl">🧾</span>
-                        </div>
-                        <p class="text-emerald-700 font-bold text-lg">Pratonton resit di sini</p>
-                        <p class="text-emerald-500/80 mt-2 font-medium">Sila isi maklumat dan klik 'Jana Resit' ya! ✨</p>
                     </div>
 
                 </div>
@@ -264,78 +545,115 @@
         </div>
     </div>
 
+    <template id="itemTemplate">
+        <div class="item-row entering">
+            <div class="f-desc">
+                <label>Perkara</label>
+                <input type="text" class="item-desc" placeholder="Cth: Kek Coklat">
+            </div>
+            <div class="f-qty">
+                <label>Kuantiti</label>
+                <input type="number" min="1" value="1" class="item-qty" onchange="calculateRowTotal(this)">
+            </div>
+            <div class="f-price">
+                <label>Harga (RM)</label>
+                <input type="number" min="0" step="0.01" class="item-price" placeholder="0.00" onchange="calculateRowTotal(this)">
+            </div>
+            <div class="f-del">
+                <button type="button" class="btn-del" onclick="removeItemRow(this)" title="Padam Item" aria-label="Padam Item">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </button>
+            </div>
+        </div>
+    </template>
+
     <script>
-        // Sistem Notifikasi Custom (Toast) Bertema Comel
+        // ================= Emoji Beranimasi =================
+        // Guna emoji beranimasi Google Noto. Jika gagal dimuat, kekalkan emoji biasa dengan animasi CSS.
+        const NOTO_BASE = 'https://fonts.gstatic.com/s/e/notoemoji/latest/';
+        function initAnimatedEmoji(root = document) {
+            root.querySelectorAll('.ae[data-e]').forEach(el => {
+                if (el.dataset.ready) return;
+                el.dataset.ready = '1';
+                const fallback = () => {
+                    el.classList.add('fallback');
+                    if (el.dataset.a) el.classList.add(el.dataset.a);
+                };
+                fallback(); // animasi CSS sementara imej dimuat
+                const img = new Image();
+                img.alt = el.textContent;
+                img.decoding = 'async';
+                img.onload = () => {
+                    el.classList.remove('fallback', 'wiggle', 'pulse', 'bounce', 'spin');
+                    el.textContent = '';
+                    el.appendChild(img);
+                };
+                img.src = NOTO_BASE + el.dataset.e + '/512.webp';
+            });
+        }
+        initAnimatedEmoji();
+
+        // ================= Toast =================
         function showToast(message, type = 'error') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            
-            const isError = type === 'error';
-            const bgColor = isError ? 'bg-rose-500' : 'bg-emerald-500';
-            const icon = isError ? '💔' : '💚';
-
-            toast.className = `${bgColor} text-white px-5 py-4 rounded-2xl shadow-lg flex items-center gap-3 toast-enter max-w-sm font-bold border-2 border-white/20`;
-            toast.innerHTML = `<span class="text-xl">${icon}</span> <span>${message}</span>`;
-            
+            toast.className = 'toast ' + type;
+            const icon = document.createElement('i');
+            icon.className = 'ae';
+            icon.dataset.e = type === 'error' ? '1f648' : '1f973';
+            icon.dataset.a = type === 'error' ? 'wiggle' : 'bounce';
+            icon.textContent = type === 'error' ? '🙈' : '🥳';
+            icon.style.fontSize = '1.5rem';
+            const text = document.createElement('span');
+            text.textContent = message;
+            toast.append(icon, text);
             container.appendChild(toast);
-
+            initAnimatedEmoji(toast);
             setTimeout(() => {
-                toast.classList.remove('toast-enter');
-                toast.classList.add('toast-exit');
+                toast.classList.add('out');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
 
-        // Pengurusan Baris Item
+        // ================= Senarai Item =================
         function addItemRow() {
             const container = document.getElementById('itemsContainer');
-            const row = document.createElement('div');
-            row.className = 'item-row flex flex-col md:flex-row gap-3 items-end p-4 bg-emerald-50/30 rounded-2xl border border-emerald-50 opacity-0 transition-opacity duration-300';
-            row.innerHTML = `
-                <div class="w-full md:w-1/2">
-                    <label class="block text-xs font-bold text-emerald-600 mb-1">Perkara 📝</label>
-                    <input type="text" class="item-desc w-full bg-white border-2 border-emerald-100 rounded-xl p-2.5 focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 outline-none transition-all text-emerald-800" placeholder="Masukkan nama item">
-                </div>
-                <div class="w-full md:w-1/4">
-                    <label class="block text-xs font-bold text-emerald-600 mb-1">Kuantiti 📦</label>
-                    <input type="number" min="1" value="1" class="item-qty w-full bg-white border-2 border-emerald-100 rounded-xl p-2.5 focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 outline-none transition-all text-emerald-800 text-center" onchange="calculateRowTotal(this)">
-                </div>
-                <div class="w-full md:w-1/4">
-                    <label class="block text-xs font-bold text-emerald-600 mb-1">Harga (RM) 💰</label>
-                    <input type="number" min="0" step="0.01" class="item-price w-full bg-white border-2 border-emerald-100 rounded-xl p-2.5 focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 outline-none transition-all text-emerald-800 text-center" placeholder="0.00" onchange="calculateRowTotal(this)">
-                </div>
-                <div class="w-full md:w-auto mt-2 md:mt-0">
-                    <button onclick="removeItemRow(this)" class="w-full md:w-auto bg-pink-100 text-pink-500 hover:bg-pink-200 hover:scale-105 p-3 rounded-xl transition-all" title="Padam Item">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                    </button>
-                </div>
-            `;
+            const row = document.getElementById('itemTemplate').content.firstElementChild.cloneNode(true);
             container.appendChild(row);
-            void row.offsetWidth; // Trigger reflow
-            row.classList.remove('opacity-0');
+            void row.offsetWidth;
+            row.classList.remove('entering');
         }
 
         function removeItemRow(btn) {
             const container = document.getElementById('itemsContainer');
             if (container.children.length > 1) {
                 const row = btn.closest('.item-row');
-                row.classList.add('opacity-0');
+                row.classList.add('leaving');
                 setTimeout(() => row.remove(), 300);
             } else {
-                showToast("Oops! Mesti ada sekurang-kurangnya satu item ya.", "error");
+                showToast('Oops! Mesti ada sekurang-kurangnya satu item ya.', 'error');
             }
         }
 
         function calculateRowTotal(input) {
-            if(input.value < 0) input.value = 0;
+            if (input.value < 0) input.value = 0;
         }
 
+        addItemRow();
+
+        // ================= Tandatangan =================
         const canvas = document.getElementById('signaturePad');
         const ctx = canvas.getContext('2d');
+        const hint = document.getElementById('canvasHint');
         let isDrawing = false;
         let isSignatureEmpty = true;
+
+        function setPen() {
+            ctx.strokeStyle = '#3d3553';
+            ctx.lineWidth = 3.5;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+        }
 
         function resizeCanvas() {
             const container = canvas.parentElement;
@@ -354,16 +672,63 @@
 
             canvas.width = newWidth;
             canvas.height = newHeight;
-
             if (saved) ctx.drawImage(saved, 0, 0);
-
-            // Dakwat pen warna hijau gelap tema
-            ctx.strokeStyle = '#064e3b';
-            ctx.lineWidth = 4;
-            ctx.lineJoin = 'round';
-            ctx.lineCap = 'round';
+            setPen();
         }
 
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        }
+
+        function startDrawing(e) {
+            if (e.cancelable) e.preventDefault();
+            isDrawing = true;
+            isSignatureEmpty = false;
+            hint.style.opacity = '0';
+            const pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            if (e.cancelable) e.preventDefault();
+            const pos = getPos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            if (isDrawing) {
+                ctx.closePath();
+                isDrawing = false;
+            }
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+        canvas.addEventListener('touchstart', startDrawing, { passive: false });
+        canvas.addEventListener('touchmove', draw, { passive: false });
+        canvas.addEventListener('touchend', stopDrawing);
+
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            isSignatureEmpty = true;
+            hint.style.opacity = '1';
+            document.getElementById('previewSignature').classList.add('hidden');
+        }
+
+        // ================= Pembantu =================
         // Buang aksara bukan digit, awalan 0 dan awalan 60 (sebab +60 sudah ditambah)
         function normalizePhone(raw) {
             let digits = raw.replace(/\D/g, '');
@@ -388,55 +753,7 @@
             return 'RST-' + ymd + '-' + pad(seq, 4);
         }
 
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        function getPos(e) {
-            const rect = canvas.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            return { x: clientX - rect.left, y: clientY - rect.top };
-        }
-
-        function startDrawing(e) {
-            isDrawing = true;
-            isSignatureEmpty = false;
-            const pos = getPos(e);
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
-            if (e.cancelable) e.preventDefault(); 
-            const pos = getPos(e);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-        }
-
-        function stopDrawing() {
-            if (isDrawing) {
-                ctx.closePath();
-                isDrawing = false;
-            }
-        }
-
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing);
-        canvas.addEventListener('touchstart', startDrawing, { passive: false });
-        canvas.addEventListener('touchmove', draw, { passive: false });
-        canvas.addEventListener('touchend', stopDrawing);
-
-        function clearSignature() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            isSignatureEmpty = true;
-            document.getElementById('previewSignature').classList.add('hidden');
-        }
-
+        // ================= Jana Resit =================
         let receiptData = {};
 
         function generateReceipt() {
@@ -444,21 +761,19 @@
             const phone = normalizePhone(document.getElementById('custPhone').value);
 
             if (!name || !phone) {
-                showToast("Sila isi nama dan nombor telefon dulu ya! ✨", "error");
+                showToast('Sila isi nama dan nombor telefon dulu ya!', 'error');
                 return;
             }
-
             if (phone.length < 8 || phone.length > 11) {
-                showToast("Nombor telefon tidak sah. Contoh: 123456789", "error");
+                showToast('Nombor telefon tidak sah. Contoh: 123456789', 'error');
                 return;
             }
 
-            const itemRows = document.querySelectorAll('.item-row');
-            let items = [];
+            const items = [];
             let totalAmount = 0;
             let hasError = false;
 
-            itemRows.forEach(row => {
+            document.querySelectorAll('#itemsContainer .item-row').forEach(row => {
                 const desc = row.querySelector('.item-desc').value.trim();
                 const qty = parseFloat(row.querySelector('.item-qty').value);
                 const price = parseFloat(row.querySelector('.item-price').value);
@@ -473,12 +788,12 @@
             });
 
             if (hasError || items.length === 0) {
-                showToast("Pastikan semua ruangan item, kuantiti dan harga diisi dengan betul.", "error");
+                showToast('Pastikan semua item, kuantiti dan harga diisi dengan betul.', 'error');
                 return;
             }
 
             if (isSignatureEmpty) {
-                showToast("Jangan lupa tandatangan comel di bawah! ✍️", "error");
+                showToast('Jangan lupa tandatangan dulu ya!', 'error');
                 return;
             }
 
@@ -486,68 +801,62 @@
             const dateStr = today.toLocaleDateString('ms-MY', { day: '2-digit', month: 'long', year: 'numeric' });
             const receiptNumber = nextReceiptNumber(today);
 
-            receiptData = {
-                name,
-                phone: '60' + phone,
-                date: dateStr,
-                receiptNumber,
-                items,
-                total: totalAmount
-            };
+            receiptData = { name, phone: '60' + phone, date: dateStr, receiptNumber, items, total: totalAmount };
 
-            document.getElementById('receiptDate').textContent = 'Tarikh: ' + dateStr;
-            document.getElementById('receiptNo').textContent = 'No Resit: ' + receiptNumber;
+            document.getElementById('receiptDate').textContent = '📅 ' + dateStr;
+            document.getElementById('receiptNo').textContent = '🔖 ' + receiptNumber;
             document.getElementById('previewName').textContent = name;
-            document.getElementById('previewPhone').textContent = '+60 ' + phone;
+            document.getElementById('previewPhone').textContent = '📱 +60 ' + phone;
 
-            const previewItemsContainer = document.getElementById('previewItems');
-            previewItemsContainer.innerHTML = ''; 
-
+            const tbody = document.getElementById('previewItems');
+            tbody.innerHTML = '';
             items.forEach(item => {
                 const tr = document.createElement('tr');
-                tr.className = 'border-b border-emerald-50/50 last:border-0';
+
                 const tdDesc = document.createElement('td');
-                tdDesc.className = 'py-3 pr-2 font-semibold';
+                tdDesc.className = 'tl';
                 tdDesc.appendChild(document.createTextNode(item.desc));
-                tdDesc.appendChild(document.createElement('br'));
                 const unit = document.createElement('span');
-                unit.className = 'text-xs text-emerald-400 font-normal';
-                unit.textContent = `@ RM${item.price.toFixed(2)}/unit`;
+                unit.className = 'unit';
+                unit.textContent = `@ RM${item.price.toFixed(2)} / unit`;
                 tdDesc.appendChild(unit);
 
                 const tdQty = document.createElement('td');
-                tdQty.className = 'text-center py-3';
+                tdQty.className = 'tc';
                 tdQty.textContent = item.qty;
 
                 const tdTotal = document.createElement('td');
-                tdTotal.className = 'text-right py-3 font-bold text-emerald-900';
+                tdTotal.className = 'tr';
                 tdTotal.textContent = `RM ${item.rowTotal.toFixed(2)}`;
 
                 tr.append(tdDesc, tdQty, tdTotal);
-                previewItemsContainer.appendChild(tr);
+                tbody.appendChild(tr);
             });
 
             document.getElementById('previewTotal').textContent = 'RM ' + totalAmount.toFixed(2);
 
-            const signatureDataUrl = canvas.toDataURL('image/png');
-            const previewSigImg = document.getElementById('previewSignature');
-            previewSigImg.src = signatureDataUrl;
-            previewSigImg.classList.remove('hidden');
+            const sig = document.getElementById('previewSignature');
+            sig.src = canvas.toDataURL('image/png');
+            sig.classList.remove('hidden');
 
+            const receipt = document.getElementById('receiptPreview');
             document.getElementById('emptyPreview').classList.add('hidden');
-            document.getElementById('receiptPreview').classList.remove('hidden');
+            receipt.classList.remove('hidden', 'pop');
+            void receipt.offsetWidth;
+            receipt.classList.add('pop');
             document.getElementById('actionButtons').classList.remove('hidden');
-            
-            showToast("Yay! Resit berjaya dijana! 🎉", "success");
-            
-            if(window.innerWidth < 1024) {
-                document.getElementById('receiptPreview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            showToast('Yay! Resit berjaya dijana!', 'success');
+
+            if (window.innerWidth < 1024) {
+                receipt.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
+        // ================= WhatsApp =================
         function sendToWhatsApp() {
             if (!receiptData.name) {
-                showToast("Sila jana resit terlebih dahulu.", "error");
+                showToast('Sila jana resit terlebih dahulu.', 'error');
                 return;
             }
 
@@ -572,32 +881,34 @@
             window.open(waUrl, '_blank');
         }
 
+        // ================= PDF =================
         function downloadPDF() {
             if (!receiptData.name) {
-                showToast("Sila jana resit terlebih dahulu.", "error");
+                showToast('Sila jana resit terlebih dahulu.', 'error');
+                return;
+            }
+            if (typeof html2pdf === 'undefined') {
+                showToast('Alat PDF belum dimuat. Cuba lagi sebentar.', 'error');
                 return;
             }
 
             const element = document.getElementById('receiptPreview');
-            
+            element.classList.remove('pop');
+
             const opt = {
-                margin:       [0.5, 0.5, 0.5, 0.5],
-                filename:     `Resit_Comel_${receiptData.receiptNumber}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { 
-                    scale: 2, 
-                    useCORS: true,
-                    scrollY: 0 
-                },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                margin:      [0.5, 0.5, 0.5, 0.5],
+                filename:    `Resit_Comel_${receiptData.receiptNumber}.pdf`,
+                image:       { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+                jsPDF:       { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            showToast("Tunggu sebentar... Fail PDF sedang disediakan! 🪄", "success");
+            showToast('Tunggu sebentar... PDF sedang disediakan!', 'success');
 
             html2pdf().set(opt).from(element).save().then(() => {
-                showToast("Berjaya! PDF telah dimuat turun. 💚", "success");
+                showToast('Berjaya! PDF telah dimuat turun.', 'success');
             }).catch(err => {
-                showToast("Alamak, ada masalah semasa memuat turun.", "error");
+                showToast('Alamak, ada masalah semasa memuat turun.', 'error');
                 console.error(err);
             });
         }
